@@ -35,6 +35,11 @@ body {
     background-color: var(--primary-color);
 }
 
+.hero-body {
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+}
+
 .button.is-warning {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
@@ -42,6 +47,11 @@ body {
 
 .button.is-warning:hover {
     background-color: darken(var(--accent-color), 10%);
+}
+
+/* 主题背景色覆盖 */
+.has-background-light {
+    background-color: var(--light-bg) !important;
 }
 
 .section.is-fullheight {
