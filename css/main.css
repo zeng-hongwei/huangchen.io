@@ -1,0 +1,165 @@
+/* main.css - 主样式文件 */
+
+:root {
+    --primary-color: #1E3A8A;
+    --secondary-color: #3B82F6;
+    --accent-color: #F59E0B;
+    --text-color: #6B7280;
+    --background-color: #FFFFFF;
+    --light-bg: #F9FAFB;
+}
+
+[data-theme="dark"] {
+    --primary-color: #1E40AF;
+    --secondary-color: #60A5FA;
+    --accent-color: #F59E0B;
+    --text-color: #D1D5DB;
+    --background-color: #1F2937;
+    --light-bg: #374151;
+}
+
+body {
+    font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Remix Icon 默认颜色 */
+[class^="ri-"] {
+    color: var(--secondary-color);
+}
+
+.hero.is-primary {
+    background-color: var(--primary-color);
+}
+
+.button.is-warning {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.button.is-warning:hover {
+    background-color: darken(var(--accent-color), 10%);
+}
+
+.section.is-fullheight {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.case-container {
+    display: block;
+    padding-top: 2rem;
+    width: 100%;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.carousel {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+
+.carousel-item {
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    margin-right: 1rem;
+}
+
+.faq-question {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.faq-answer {
+    display: none;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+[data-theme="dark"] .faq-answer {
+    border-top-color: #4B5563;
+}
+
+.faq-item.active .faq-answer {
+    display: block;
+}
+
+.navbar {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .navbar {
+    background-color: rgba(31, 41, 55, 0.9);
+}
+
+.footer {
+    background-color: var(--light-bg);
+}
+
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.intro-container > .columns {
+    margin-top: 2rem;
+}
+
+.case-container {
+    display: block;
+    padding-top: 2rem;
+}
+
+.main-button {
+    text-align: center;
+    margin: 50% 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .hero-body .title {
+        font-size: 2rem;
+    }
+    .hero-body .subtitle {
+        font-size: 1.5rem;
+    }
+    .columns.is-multiline .column.is-one-quarter {
+        flex-basis: 50%;
+    }
+    html, body {
+        height: 100%;
+        overflow-x: hidden;
+    }
+    .case-container {
+        text-align: center;
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "huangchen.github.io",
+  "version": "1.0.0",
+  "description": "《数据素养课程》H5网站",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint js/**/*.js",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "vite": "^4.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0"
+  },
+  "author": "zeng-hongwei",
+  "license": "MIT"
+}
