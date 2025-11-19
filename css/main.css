@@ -10,6 +10,8 @@
     --light-bg: #F9FAFB;
     
     /* 组件颜色变量 */
+    --front-cover-bg: #60A5FA;
+    --front-cover-text: rgba(0, 0, 0, 0.9);
     --box-shadow-light: rgba(0, 0, 0, 0.1);
     --box-shadow-dark: rgba(0, 0, 0, 0.3);
     --border-color: #ddd;
@@ -28,6 +30,8 @@
     --background-color: #1F2937;
     --light-bg: #374151;
     
+    --front-cover-bg: #1E3A8A;
+    --front-cover-text: var(--text-color);
     --box-shadow-light: rgba(0, 0, 0, 0.3);
     --box-shadow-dark: rgba(0, 0, 0, 0.5);
     --border-color: #4B5563;
@@ -46,7 +50,9 @@
         --text-color: #D1D5DB;
         --background-color: #1F2937;
         --light-bg: #374151;
-        
+
+        --front-cover-bg: #1E3A8A;
+        --front-cover-text: var(--text-color);
         --box-shadow-light: rgba(0, 0, 0, 0.3);
         --box-shadow-dark: rgba(0, 0, 0, 0.5);
         --border-color: #4B5563;
@@ -70,13 +76,15 @@ body {
     color: var(--secondary-color);
 }
 
-.hero.is-primary {
-    background-color: var(--primary-color);
+.hero.front-cover {
+    background-color: var(--front-cover-bg);
+    .title, .subtitle, p {
+        color: var(--front-cover-text);
+    }
 }
 
 .hero-body {
-    padding-top: 6rem;
-    padding-bottom: 3rem;
+    margin: 10% 0;
 }
 
 .button.is-warning {

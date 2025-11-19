@@ -117,7 +117,7 @@
 
 1. **构建生产版本**：运行 `npm run build`，生成 `dist/` 文件夹。
 2. **本地预览**：运行 `npm run preview` 检查构建结果。
-3. **部署到GitHub Pages**：推送代码到main分支，GitHub Actions自动部署（需配置workflow文件）。
+3. **部署到Netlify**：推送代码到main分支，Netlify自动部署。
 
 ## 浏览器兼容性
 
