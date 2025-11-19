@@ -110,6 +110,14 @@ const utils = {
                 setTimeout(() => inThrottle = false, limit);
             }
         };
+    },
+
+    /**
+     * 判断当前视口是否为移动端
+     * @returns {boolean}
+     */
+    isMobile() {
+        return window.matchMedia('(max-width: 768px)').matches;
     }
 };
 
@@ -223,10 +231,12 @@ function initScrollSnap() {
                 
                 // 控制navbar显示/隐藏
                 const isFirstSection = entry.target.id === 'home' || entry.target === sections[0];
-                if (isFirstSection) {
-                    navbar.classList.remove('hidden');
+
+                const isMobile = utils.isMobile();
+                if (!isFirstSection && isMobile) {
+                    navbar.classList.add('navbar-mini');
                 } else {
-                    navbar.classList.add('hidden');
+                    navbar.classList.remove('navbar-mini');
                 }
             } else {
                 entry.target.classList.remove('visible');
@@ -237,6 +247,15 @@ function initScrollSnap() {
     sections.forEach(section => {
         observer.observe(section);
     });
+
+    window.addEventListener('resize', utils.debounce(() => {
+        const firstSectionVisible = sections.length > 0 && sections[0].classList.contains('visible');
+        if (!firstSectionVisible && utils.isMobile()) {
+            navbar.classList.add('navbar-mini');
+        } else {
+            navbar.classList.remove('navbar-mini');
+        }
+    }, 150));
 }
 
 /**
@@ -247,7 +266,7 @@ function initInstructorImage() {
     if (!instructorFigure) return;
     
     function updateInstructorImage() {
-        if (window.innerWidth <= 768) {
+        if (utils.isMobile()) {
             instructorFigure.classList.remove('is-2by3');
             instructorFigure.classList.add('is-1by1');
         } else {

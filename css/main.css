@@ -50,7 +50,7 @@ html {
 
 /* 浏览器主题偏好支持 */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
         --primary-color: #1E40AF;
         --secondary-color: #60A5FA;
         --accent-color: #F59E0B;
@@ -136,6 +136,17 @@ section.is-fullheight.visible {
     width: 100%;
 }
 
+#instructor .columns {
+    align-items: center;
+}
+
+.instructor-details {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 2rem;
+}
+
 .stat {
     text-align: center;
 }
@@ -144,7 +155,7 @@ section.is-fullheight.visible {
     font-family: 'Monaco', 'Consolas', monospace;
     font-size: 3rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .stat-label {
@@ -247,6 +258,21 @@ section.is-fullheight.visible {
         aspect-ratio: 1;
         object-fit: cover;
         object-position: top;
+    }
+    #top-menu {
+        text-align: end;
+    }
+    .navbar.navbar-mini {
+        background: transparent;
+    }
+    .navbar.navbar-mini .navbar-brand .navbar-item {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .navbar.navbar-mini .navbar-brand .navbar-burger {
+        opacity: 1;
+        pointer-events: auto;
     }
 }
 
