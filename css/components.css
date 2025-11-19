@@ -57,6 +57,17 @@
     animation: fadeIn 0.3s ease-in;
 }
 
+figure.image img {
+    border-radius: 8px;
+}
+
+.carousel-item img {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--box-shadow-light);
+    width: 100%;
+    height: auto;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -64,8 +75,8 @@
 
 /* 二维码模块样式 */
 .qrcode-image {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     margin: 0.5rem auto;
     display: block;
     border-radius: 8px;

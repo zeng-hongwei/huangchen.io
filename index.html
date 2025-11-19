@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
     <!-- 页头 -->
@@ -27,6 +28,7 @@
                 <a class="navbar-item" href="#course">课程</a>
                 <a class="navbar-item" href="#resources">资源</a>
                 <a class="navbar-item" href="#about">关于我们</a>
+                <a class="navbar-item" href="#contact">联系我们</a>
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
@@ -183,10 +185,11 @@
             <div class="columns">
                 <div class="column is-one-third">
                     <figure class="image is-2by3">
-                        <img src="images/speaker.webp" alt="讲师照片">
+                        <img src="images/speaker.webp" alt="讲师照片" class="instructor-photo">
                     </figure>
                 </div>
                 <div class="column">
+                    <div class="container">
                     <strong class="title is-3">张三丰</strong>
                     <ul>
                         <li><i class="ri-graduation-cap-fill"></i> 清华大学计算机科学博士</li>
@@ -195,6 +198,7 @@
                         <li><i class="ri-book-fill"></i> 出版《数据思维》等专著 3 部</li>
                         <li><i class="ri-medal-fill"></i> 累计培养数据人才超过 5000 名</li>
                     </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -358,36 +362,48 @@
         </div>
     </section>
 
+    <!-- 第10屏：联系我们 -->
+    <section id="contact" class="section is-fullheight">
+        <div class="container has-text-centered">
+            <h2 class="title is-2">联系我们</h2>
+            <div class="columns is-multiline">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <p><strong>关注我们</strong></p>
+                        <div class="has-text-centered">
+                            <img src="images/qrcode.webp" alt="二维码" class="qrcode-image">
+                            <p><i class="ri-wechat-fill"></i> 扫码关注官微</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <p><strong>社交媒体</strong></p>
+                        <div class="has-text-centered">
+                            <a href="#" class="mx-2"><i class="ri-weibo-fill ri-2x"></i></a>
+                            <a href="#" class="mx-2"><i class="ri-wechat-fill ri-2x"></i></a>
+                            <a href="#" class="mx-2"><i class="ri-linkedin-fill ri-2x"></i></a>
+                            <a href="#" class="mx-2"><i class="ri-github-fill ri-2x"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <p><strong>联系方式</strong></p>
+                        <p>地址：北京市朝阳区</p>
+                        <p>电话：010-12345678</p>
+                        <p>邮箱：contact@example.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 页脚 -->
     <footer class="footer">
         <div class="content has-text-centered">
-            <div class="columns">
-                <div class="column">
-                    <p><strong>关注我们</strong></p>
-                    <div class="has-text-centered">
-                        <img src="images/qrcode.webp" alt="二维码" class="qrcode-image">
-                        <p><i class="ri-wechat-fill"></i> 扫码关注官微</p>
-                    </div>
-                </div>
-                <div class="column">
-                    <p><strong>社交媒体</strong></p>
-                    <a href="#"><i class="ri-weibo-fill"></i></a>
-                    <a href="#"><i class="ri-wechat-fill"></i></a>
-                    <a href="#"><i class="ri-linkedin-fill"></i></a>
-                    <a href="#"><i class="ri-github-fill"></i></a>
-                </div>
-                <div class="column">
-                    <p><strong>联系方式</strong></p>
-                    <p>地址：北京市朝阳区</p>
-                    <p>电话：010-12345678</p>
-                    <p>邮箱：contact@example.com</p>
-                </div>
-                <div class="column">
-                    <p><strong>版权</strong></p>
-                    <p>&copy; 2025 数据素养课程. All rights reserved.</p>
-                    <p>网站备案信息</p>
-                </div>
-            </div>
+            <p>&copy; 2025 数据素养课程. All rights reserved.</p>
+            <p>网站备案信息</p>
         </div>
     </footer>
 

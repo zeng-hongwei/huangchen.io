@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCarousel();
     initThemeToggle();
     initScrollSnap();
+    initInstructorImage();
 });
 
 /**
@@ -127,31 +128,49 @@ function initThemeToggle() {
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const systemTheme = prefersDark ? 'dark' : 'light';
     
-    // 从localStorage获取保存的主题，如果没有则使用系统偏好
-    const savedTheme = localStorage.getItem('theme') || systemTheme;
-    setTheme(savedTheme);
+    // 从localStorage获取保存的模式，如果没有则使用跟随系统
+    let currentMode = localStorage.getItem('theme-mode') || 'auto';
+    
+    // 根据模式设置主题
+    applyTheme(currentMode, systemTheme);
 
     // 更新按钮状态
-    updateThemeButton(savedTheme);
+    updateThemeButton(currentMode);
 
     // 监听系统主题变化
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        // 只有当用户没有手动设置主题时，才跟随系统主题
-        if (!localStorage.getItem('theme')) {
-            const newSystemTheme = e.matches ? 'dark' : 'light';
+        const newSystemTheme = e.matches ? 'dark' : 'light';
+        // 只有当模式是跟随系统时，才更新主题
+        if (currentMode === 'auto') {
             setTheme(newSystemTheme);
-            updateThemeButton(newSystemTheme);
         }
     });
 
     // 绑定点击事件
     themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        updateThemeButton(newTheme);
-        localStorage.setItem('theme', newTheme);
+        // 循环模式：light -> dark -> auto -> light...
+        if (currentMode === 'light') {
+            currentMode = 'dark';
+        } else if (currentMode === 'dark') {
+            currentMode = 'auto';
+        } else {
+            currentMode = 'light';
+        }
+        
+        localStorage.setItem('theme-mode', currentMode);
+        applyTheme(currentMode, systemTheme);
+        updateThemeButton(currentMode);
     });
+
+    /**
+     * 根据模式应用主题
+     * @param {string} mode - 'light', 'dark', 或 'auto'
+     * @param {string} systemTheme - 系统偏好主题
+     */
+    function applyTheme(mode, systemTheme) {
+        const theme = mode === 'auto' ? systemTheme : mode;
+        setTheme(theme);
+    }
 
     /**
      * 设置主题
@@ -163,15 +182,18 @@ function initThemeToggle() {
 
     /**
      * 更新按钮显示
-     * @param {string} theme - 当前主题
+     * @param {string} mode - 当前模式
      */
-    function updateThemeButton(theme) {
-        if (theme === 'dark') {
+    function updateThemeButton(mode) {
+        if (mode === 'light') {
             themeIcon.className = 'ri-sun-line';
             themeText.textContent = '明亮';
-        } else {
+        } else if (mode === 'dark') {
             themeIcon.className = 'ri-moon-line';
             themeText.textContent = '暗黑';
+        } else {
+            themeIcon.className = 'ri-computer-line';
+            themeText.textContent = '跟随系统';
         }
     }
 }
@@ -181,6 +203,7 @@ function initThemeToggle() {
  */
 function initScrollSnap() {
     const sections = document.querySelectorAll('section.is-fullheight');
+    const navbar = document.querySelector('.navbar');
     
     // 让第一屏立即可见
     if (sections.length > 0) {
@@ -197,6 +220,14 @@ function initScrollSnap() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                
+                // 控制navbar显示/隐藏
+                const isFirstSection = entry.target.id === 'home' || entry.target === sections[0];
+                if (isFirstSection) {
+                    navbar.classList.remove('hidden');
+                } else {
+                    navbar.classList.add('hidden');
+                }
             } else {
                 entry.target.classList.remove('visible');
             }
@@ -206,4 +237,28 @@ function initScrollSnap() {
     sections.forEach(section => {
         observer.observe(section);
     });
+}
+
+/**
+ * 初始化讲师照片响应式显示
+ */
+function initInstructorImage() {
+    const instructorFigure = document.querySelector('figure.image.is-2by3');
+    if (!instructorFigure) return;
+    
+    function updateInstructorImage() {
+        if (window.innerWidth <= 768) {
+            instructorFigure.classList.remove('is-2by3');
+            instructorFigure.classList.add('is-1by1');
+        } else {
+            instructorFigure.classList.remove('is-1by1');
+            instructorFigure.classList.add('is-2by3');
+        }
+    }
+    
+    // 初始设置
+    updateInstructorImage();
+    
+    // 监听窗口大小变化
+    window.addEventListener('resize', utils.debounce(updateInstructorImage, 100));
 }
