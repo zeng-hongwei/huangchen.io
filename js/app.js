@@ -122,12 +122,26 @@ function initThemeToggle() {
     const themeIcon = document.getElementById('theme-icon');
     const themeText = document.getElementById('theme-text');
 
-    // 从localStorage获取保存的主题
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    // 检查系统主题偏好
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const systemTheme = prefersDark ? 'dark' : 'light';
+    
+    // 从localStorage获取保存的主题，如果没有则使用系统偏好
+    const savedTheme = localStorage.getItem('theme') || systemTheme;
     setTheme(savedTheme);
 
     // 更新按钮状态
     updateThemeButton(savedTheme);
+
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // 只有当用户没有手动设置主题时，才跟随系统主题
+        if (!localStorage.getItem('theme')) {
+            const newSystemTheme = e.matches ? 'dark' : 'light';
+            setTheme(newSystemTheme);
+            updateThemeButton(newSystemTheme);
+        }
+    });
 
     // 绑定点击事件
     themeToggle.addEventListener('click', () => {

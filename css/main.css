@@ -1,14 +1,25 @@
 /* main.css - 主样式文件 */
 
 :root {
+    /* 基础颜色变量 */
     --primary-color: #1E3A8A;
     --secondary-color: #3B82F6;
     --accent-color: #F59E0B;
     --text-color: #6B7280;
     --background-color: #FFFFFF;
     --light-bg: #F9FAFB;
+    
+    /* 组件颜色变量 */
+    --box-shadow-light: rgba(0, 0, 0, 0.1);
+    --box-shadow-dark: rgba(0, 0, 0, 0.3);
+    --border-color: #ddd;
+    --border-color-dark: #4B5563;
+    --hover-bg: #f5f5f5;
+    --navbar-bg: rgba(255, 255, 255, 0.9);
+    --navbar-bg-dark: rgba(31, 41, 55, 0.9);
 }
 
+/* 暗色主题 */
 [data-theme="dark"] {
     --primary-color: #1E40AF;
     --secondary-color: #60A5FA;
@@ -16,6 +27,34 @@
     --text-color: #D1D5DB;
     --background-color: #1F2937;
     --light-bg: #374151;
+    
+    --box-shadow-light: rgba(0, 0, 0, 0.3);
+    --box-shadow-dark: rgba(0, 0, 0, 0.5);
+    --border-color: #4B5563;
+    --border-color-dark: #6B7280;
+    --hover-bg: #374151;
+    --navbar-bg: rgba(31, 41, 55, 0.9);
+    --navbar-bg-dark: rgba(17, 24, 39, 0.9);
+}
+
+/* 浏览器主题偏好支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #1E40AF;
+        --secondary-color: #60A5FA;
+        --accent-color: #F59E0B;
+        --text-color: #D1D5DB;
+        --background-color: #1F2937;
+        --light-bg: #374151;
+        
+        --box-shadow-light: rgba(0, 0, 0, 0.3);
+        --box-shadow-dark: rgba(0, 0, 0, 0.5);
+        --border-color: #4B5563;
+        --border-color-dark: #6B7280;
+        --hover-bg: #374151;
+        --navbar-bg: rgba(31, 41, 55, 0.9);
+        --navbar-bg-dark: rgba(17, 24, 39, 0.9);
+    }
 }
 
 body {
@@ -109,11 +148,7 @@ body {
 .faq-answer {
     display: none;
     padding: 1rem;
-    border-top: 1px solid #ddd;
-}
-
-[data-theme="dark"] .faq-answer {
-    border-top-color: #4B5563;
+    border-top: 1px solid var(--border-color);
 }
 
 .faq-item.active .faq-answer {
@@ -121,12 +156,8 @@ body {
 }
 
 .navbar {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--navbar-bg);
     backdrop-filter: blur(10px);
-}
-
-[data-theme="dark"] .navbar {
-    background-color: rgba(31, 41, 55, 0.9);
 }
 
 .footer {
