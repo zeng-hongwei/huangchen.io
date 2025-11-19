@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFAQ();
     initCarousel();
     initThemeToggle();
+    initScrollSnap();
 });
 
 /**
@@ -173,4 +174,36 @@ function initThemeToggle() {
             themeText.textContent = '暗黑';
         }
     }
+}
+
+/**
+ * 初始化整页滚动和过渡效果
+ */
+function initScrollSnap() {
+    const sections = document.querySelectorAll('section.is-fullheight');
+    
+    // 让第一屏立即可见
+    if (sections.length > 0) {
+        sections[0].classList.add('visible');
+    }
+    
+    const observerOptions = {
+        root: null,
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, observerOptions);
+    
+    sections.forEach(section => {
+        observer.observe(section);
+    });
 }
