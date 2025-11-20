@@ -23,12 +23,12 @@ function copyLogoPlugin() {
     apply: 'build',
     closeBundle() {
       const src = resolve(process.cwd(), 'images/logo.svg');
-      const destDir = resolve(process.cwd(), 'dist/image');
+      const destDir = resolve(process.cwd(), 'dist/images');
       const dest = resolve(destDir, 'logo.svg');
       try {
         mkdirSync(destDir, { recursive: true });
         copyFileSync(src, dest);
-        console.log('Copied logo.svg to dist/image/logo.svg');
+        console.log('Copied logo.svg to dist/images/logo.svg');
       } catch (error) {
         console.error('Failed to copy logo.svg:', error);
       }
