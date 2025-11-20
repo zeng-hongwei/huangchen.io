@@ -1,0 +1,45 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#7000ff"/>
+    </linearGradient>
+    <filter id="glow-effect">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <g transform="translate(128 128) scale(1.9) translate(-128 -128)">
+    <!-- 背景六边形网格（象征知识结构） -->
+    <g opacity="0.15">
+      <path d="M148 50 L188 80 L188 140 L148 170 L108 140 L108 80 Z" fill="none" stroke="#7000ff" stroke-width="1.5"/>
+      <path d="M68 90 L108 60 L148 90 L148 150 L108 180 L68 150 Z" fill="none" stroke="#7000ff" stroke-width="1.5"/>
+      <path d="M108 140 L148 110 L188 140 L188 200 L148 230 L108 200 Z" fill="none" stroke="#7000ff" stroke-width="1.5"/>
+    </g>
+    
+    <!-- 数据流动回路 -->
+    <g filter="url(#glow-effect)">
+      <circle cx="128" cy="128" r="50" fill="none" stroke="url(#glow)" stroke-width="6" opacity="0.8"/>
+      <circle cx="128" cy="128" r="36" fill="none" stroke="#ffffff" stroke-width="3"/>
+      
+      <!-- 流动的粒子点 -->
+      <circle cx="168" cy="88" r="8" fill="#00d4ff">
+        <animateTransform attributeName="transform" type="rotate" from="0 128 128" to="360 128 128" dur="20s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="88" cy="168" r="8" fill="#7000ff">
+        <animateTransform attributeName="transform" type="rotate" from="0 128 128" to="-360 128 128" dur="25s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    
+    <!-- 中心数据节点（发光核心） -->
+    <g filter="url(#glow-effect)">
+      <circle cx="128" cy="128" r="18" fill="#ffffff"/>
+      <circle cx="128" cy="128" r="12" fill="url(#glow)"/>
+      <circle cx="128" cy="128" r="6" fill="#ffffff"/>
+    </g>
+  </g>
+</svg>
