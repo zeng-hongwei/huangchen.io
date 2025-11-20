@@ -1,7 +1,7 @@
 /*global process*/
 import { defineConfig } from 'vite';
 import { execSync } from 'node:child_process';
-import { copyFileSync, mkdirSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 function resolveCommitHash() {
@@ -36,6 +36,23 @@ function copyLogoPlugin() {
   };
 }
 
+function copyDocsPlugin() {
+  return {
+    name: 'copy-docs-to-dist',
+    apply: 'build',
+    closeBundle() {
+      const src = resolve(process.cwd(), 'assets/docs');
+      const dest = resolve(process.cwd(), 'dist/assets/docs');
+      try {
+        cpSync(src, dest, { recursive: true });
+        console.log('Copied docs to dist/assets/docs');
+      } catch (error) {
+        console.error('Failed to copy docs:', error);
+      }
+    }
+  };
+}
+
 export default defineConfig({
   root: '.',
   build: {
@@ -51,5 +68,5 @@ export default defineConfig({
   define: {
     __APP_COMMIT__: JSON.stringify(commitHash)
   },
-  plugins: [copyLogoPlugin()]
+  plugins: [copyLogoPlugin(), copyDocsPlugin()]
 });
