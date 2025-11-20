@@ -22,15 +22,15 @@ function copyLogoPlugin() {
     name: 'copy-logo-to-dist',
     apply: 'build',
     closeBundle() {
-      const src = resolve(process.cwd(), 'images/logo.svg');
-      const destDir = resolve(process.cwd(), 'dist/images');
-      const dest = resolve(destDir, 'logo.svg');
+      const src = resolve(process.cwd(), 'images/logo.png');
+      const destDir = resolve(process.cwd(), 'dist/assets');
+      const dest = resolve(destDir, 'logo.png');
       try {
         mkdirSync(destDir, { recursive: true });
         copyFileSync(src, dest);
-        console.log('Copied logo.svg to dist/images/logo.svg');
+        console.log('Copied logo.png to dist/assets/logo.png');
       } catch (error) {
-        console.error('Failed to copy logo.svg:', error);
+        console.error('Failed to copy logo.png:', error);
       }
     }
   };
