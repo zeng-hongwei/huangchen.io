@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
     initSmoothScroll();
     initFAQ();
-    initCarousel();
     initThemeToggle();
     initScrollSnap();
     initInstructorImage();
+    initCasesCarousel();
 });
 
 /**
@@ -63,14 +63,6 @@ function initFAQ() {
             item.classList.add('active');
         });
     });
-}
-
-/**
- * 初始化轮播（简单版本）
- */
-function initCarousel() {
-    // 这里可以添加轮播逻辑，如自动播放、导航按钮等
-    // 目前使用CSS的滚动
 }
 
 /**
@@ -205,6 +197,72 @@ function initThemeToggle() {
         }
     }
 }
+
+    /**
+     * 初始化案例跑马灯
+     */
+    function initCasesCarousel() {
+        const carousel = document.querySelector('#cases .carousel');
+        if (!carousel) return;
+
+        const items = carousel.querySelectorAll('.carousel-item');
+        if (items.length === 0) return;
+
+        let currentIndex = 0;
+        let autoplayId = null;
+
+        const setActiveState = () => {
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === currentIndex);
+            });
+        };
+
+        const scrollToCurrent = (behavior = 'smooth') => {
+            const activeItem = items[currentIndex];
+            if (!activeItem) return;
+
+            setActiveState();
+
+            const containerWidth = carousel.clientWidth;
+            const itemWidth = activeItem.clientWidth;
+            const desiredLeft = activeItem.offsetLeft - (containerWidth - itemWidth) / 2;
+            const maxScroll = carousel.scrollWidth - containerWidth;
+            const clampedLeft = Math.max(0, Math.min(desiredLeft, maxScroll));
+
+            if (typeof carousel.scrollTo === 'function') {
+                carousel.scrollTo({ left: clampedLeft, behavior });
+            } else {
+                carousel.scrollLeft = clampedLeft;
+            }
+        };
+
+        const moveToNext = () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            scrollToCurrent();
+        };
+
+        const stopAutoplay = () => {
+            if (autoplayId) {
+                clearInterval(autoplayId);
+                autoplayId = null;
+            }
+        };
+
+        const startAutoplay = () => {
+            stopAutoplay();
+            autoplayId = setInterval(moveToNext, 3000);
+        };
+
+        scrollToCurrent('auto');
+
+        if (items.length > 1) {
+            startAutoplay();
+            carousel.addEventListener('mouseenter', stopAutoplay);
+            carousel.addEventListener('mouseleave', startAutoplay);
+        }
+
+        window.addEventListener('resize', utils.debounce(() => scrollToCurrent('auto'), 150));
+    }
 
 /**
  * 初始化整页滚动和过渡效果

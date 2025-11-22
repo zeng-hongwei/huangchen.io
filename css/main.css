@@ -80,6 +80,8 @@ body {
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
     overflow-y: auto;
+    max-width: 1136px;
+    margin: 0 auto; /* Center the content */
 }
 
 /* Remix Icon 默认颜色 */
@@ -208,18 +210,35 @@ section.is-fullheight > * {
     color: var(--text-color);
 }
 
+/* Style for the carousel container */
 .carousel {
     display: flex;
-    overflow-x: scroll;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: 0 clamp(1rem, 8vw, 6rem);
+    overflow-x: auto;
+    scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
+    scrollbar-width: none; /* Firefox */
+    position: relative;
 }
 
+.carousel::-webkit-scrollbar {
+    display: none; /* WebKit */
+}
+
+/* Style for carousel items */
 .carousel-item {
-    flex: 0 0 300px;
-    scroll-snap-align: start;
-    margin-right: 1rem;
+    flex: 0 0 min(80%, 960px);
+    scroll-snap-align: center;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    opacity: 0.35;
+    transform: scale(0.96);
+}
+
+/* Highlight the current item */
+.carousel-item.active {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .faq-question {
