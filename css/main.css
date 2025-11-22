@@ -199,14 +199,57 @@ section.is-fullheight > * {
 
 .stat-number {
     font-family: 'Monaco', 'Consolas', monospace;
-    font-size: 3rem;
-    font-weight: bold;
+    font-size: clamp(2.75rem, 4vw, 4rem);
+    font-weight: 700;
     color: var(--secondary-color);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 900px;
+    min-height: 3.5rem;
+}
+
+.stat-number .digit {
+    display: inline-block;
+    padding: 0 0.25em;
+    transform-origin: center center;
+    backface-visibility: hidden;
+}
+
+.stat-number .digit.flip {
+    animation: statFlip 1.2s ease;
+}
+
+@keyframes statFlip {
+    0% {
+        transform: rotateX(0deg);
+    }
+    100% {
+        transform: rotateX(-360deg);
+    }
 }
 
 .stat-label {
     font-size: 1.2rem;
     color: var(--text-color);
+}
+
+.section-divider {
+    width: 100%;
+    margin: 1rem auto 2rem;
+    border: none;
+    border-top: 2px solid var(--text-color);
+}
+
+#home .section-divider {
+    width: 50%;
+    color: var(--primary-color);
+}
+
+.box .box-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
 }
 
 /* Style for the carousel container */
@@ -282,10 +325,6 @@ section.is-fullheight > * {
     height: 100%;
 }
 
-.intro-container > .columns {
-    margin-top: 2rem;
-}
-
 .case-container {
     display: block;
     padding-top: 2rem;
@@ -314,7 +353,23 @@ section.is-fullheight > * {
   margin-right: 1rem;
 }
 
-/* 响应式设计 */
+/* 响应式设计：桌面浏览器 */
+@media (min-width: 960px) {
+    .section {
+        padding-left: 120px;
+        padding-right: 120px;
+    }
+    .content.passage {
+        max-width: 768px;
+        margin: 0 auto;
+    }
+    .columns {
+        column-gap: 3rem;
+        row-gap: 2.5rem;
+    }
+}
+
+/* 响应式设计：移动设备 */
 @media (max-width: 768px) {
     .hero-body .title {
         font-size: 2rem;

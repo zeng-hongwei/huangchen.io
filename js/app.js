@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollSnap();
     initInstructorImage();
     initCasesCarousel();
+    initStatsFlip();
 });
 
 /**
@@ -52,17 +53,62 @@ function initSmoothScroll() {
  */
 function initFAQ() {
     const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        question.addEventListener('click', () => {
-            // 移除所有item的active类
-            faqItems.forEach(otherItem => {
-                otherItem.classList.remove('active');
-            });
-            // 为当前item添加active类
-            item.classList.add('active');
+    if (!faqItems.length) return;
+
+    const ensureFirstActive = () => {
+        const hasActive = Array.from(faqItems).some(item => item.classList.contains('active'));
+        if (!hasActive && faqItems[0]) {
+            faqItems[0].classList.add('active');
+        }
+    };
+
+    const attachMobileHandlers = () => {
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (!question) return;
+            if (!question._faqHandler) {
+                question._faqHandler = () => {
+                    faqItems.forEach(otherItem => otherItem.classList.remove('active'));
+                    item.classList.add('active');
+                };
+            }
+            question.addEventListener('click', question._faqHandler);
         });
-    });
+    };
+
+    const detachHandlers = () => {
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (question && question._faqHandler) {
+                question.removeEventListener('click', question._faqHandler);
+            }
+        });
+    };
+
+    const setAllExpanded = () => {
+        faqItems.forEach(item => item.classList.add('active'));
+    };
+
+    let currentMobileState = null;
+
+    const applyFAQMode = () => {
+        const isMobile = utils.isMobile();
+        if (isMobile === currentMobileState) return;
+        currentMobileState = isMobile;
+
+        detachHandlers();
+
+        if (isMobile) {
+            faqItems.forEach(item => item.classList.remove('active'));
+            ensureFirstActive();
+            attachMobileHandlers();
+        } else {
+            setAllExpanded();
+        }
+    };
+
+    applyFAQMode();
+    window.addEventListener('resize', utils.debounce(applyFAQMode, 150));
 }
 
 /**
@@ -262,6 +308,74 @@ function initThemeToggle() {
         }
 
         window.addEventListener('resize', utils.debounce(() => scrollToCurrent('auto'), 150));
+    }
+
+    /**
+     * 初始化数字翻牌动画
+     */
+    function initStatsFlip() {
+        const section = document.getElementById('results');
+        if (!section) return;
+
+        const statNumbers = Array.from(section.querySelectorAll('.stat-number'));
+        if (!statNumbers.length) return;
+
+        statNumbers.forEach(el => {
+            const targetValue = Number(el.dataset.target ?? el.textContent.trim()) || 0;
+            el.dataset.target = String(targetValue);
+            if (!el.querySelector('.digit')) {
+                el.innerHTML = '<span class="digit">0</span>';
+            } else {
+                el.querySelector('.digit').textContent = '0';
+            }
+        });
+
+        const animateStat = (el) => {
+            const digitEl = el.querySelector('.digit');
+            if (!digitEl) return;
+            const target = Number(el.dataset.target) || 0;
+            const duration = 1500;
+            const start = performance.now();
+            let lastValue = 0;
+
+            const tick = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const currentValue = Math.round(eased * target);
+
+                if (currentValue !== lastValue) {
+                    digitEl.textContent = currentValue;
+                    digitEl.classList.remove('flip');
+                    void digitEl.offsetWidth;
+                    digitEl.classList.add('flip');
+                    lastValue = currentValue;
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                }
+            };
+
+            requestAnimationFrame(tick);
+        };
+
+        let played = false;
+        const playOnce = () => {
+            if (played) return;
+            played = true;
+            statNumbers.forEach(animateStat);
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    playOnce();
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.4 });
+
+        observer.observe(section);
     }
 
 /**
