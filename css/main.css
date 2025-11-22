@@ -152,7 +152,7 @@ section.is-fullheight.visible {
 }
 
 section.is-fullheight:not(#home)::before {
-    background-image: url('../images/backdrop.webp');
+    background-image: none;
     background-position: center bottom;
     opacity: 0.45;
     mask-image: linear-gradient(to top, rgba(0,0,0,0.85) 10%, rgba(0,0,0,0));
