@@ -287,6 +287,26 @@ function initThemeToggle() {
             scrollToCurrent();
         };
 
+        const syncActiveWithScroll = () => {
+            const containerCenter = carousel.scrollLeft + carousel.clientWidth / 2;
+            let closestIndex = currentIndex;
+            let smallestDistance = Number.POSITIVE_INFINITY;
+
+            items.forEach((item, index) => {
+                const itemCenter = item.offsetLeft + item.clientWidth / 2;
+                const distance = Math.abs(itemCenter - containerCenter);
+                if (distance < smallestDistance) {
+                    smallestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            if (closestIndex !== currentIndex) {
+                currentIndex = closestIndex;
+                setActiveState();
+            }
+        };
+
         const stopAutoplay = () => {
             if (autoplayId) {
                 clearInterval(autoplayId);
@@ -305,6 +325,7 @@ function initThemeToggle() {
             startAutoplay();
             carousel.addEventListener('mouseenter', stopAutoplay);
             carousel.addEventListener('mouseleave', startAutoplay);
+            carousel.addEventListener('scroll', utils.throttle(syncActiveWithScroll, 120));
         }
 
         window.addEventListener('resize', utils.debounce(() => scrollToCurrent('auto'), 150));
