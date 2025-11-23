@@ -325,6 +325,11 @@ section.is-fullheight > * {
     height: 100%;
 }
 
+/* Make spacing between .column elements consistent across resolutions */
+.columns {
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+}
+
 .case-container {
     display: block;
     padding-top: 2rem;
@@ -414,4 +419,30 @@ section.is-fullheight > * {
 .instructor-photo {
     aspect-ratio: 2/3;
     object-fit: cover;
+}
+
+/* Instructor message: move inline styles into CSS for maintainability */
+.instructor-message p {
+    text-align: justify;
+    margin-bottom: 1rem;
+}
+.instructor-message p.signature {
+    text-align: right;
+    margin-bottom: 0;
+}
+
+/* Audience and FAQ: justify text for content blocks */
+#audience .column p,
+#audience .column li,
+#faq .faq-answer,
+#faq .faq-answer p {
+    text-align: justify;
+    /* Prefer character-based justification for CJK */
+    text-justify: inter-character;
+}
+
+/* Prevent last-line stretching on some browsers */
+#audience .column p:last-child,
+#faq .faq-answer:last-child {
+    text-align-last: left;
 }
