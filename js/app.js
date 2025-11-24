@@ -342,7 +342,7 @@ function initThemeToggle() {
         if (!statNumbers.length) return;
 
         statNumbers.forEach(el => {
-            const targetValue = Number(el.dataset.target ?? el.textContent.trim()) || 0;
+            const targetValue = el.dataset.target ?? el.textContent.trim();
             el.dataset.target = String(targetValue);
             if (!el.querySelector('.digit')) {
                 el.innerHTML = '<span class="digit">0</span>';
@@ -354,7 +354,9 @@ function initThemeToggle() {
         const animateStat = (el) => {
             const digitEl = el.querySelector('.digit');
             if (!digitEl) return;
-            const target = Number(el.dataset.target) || 0;
+            const targetMatches = el.dataset.target.match(/^(\d+)(.*)/);
+            if (!targetMatches) return;
+            const [, target, suffix] = targetMatches;
             const duration = 1500;
             const start = performance.now();
             let lastValue = 0;
@@ -365,7 +367,7 @@ function initThemeToggle() {
                 const currentValue = Math.round(eased * target);
 
                 if (currentValue !== lastValue) {
-                    digitEl.textContent = currentValue;
+                    digitEl.textContent = currentValue + suffix;
                     digitEl.classList.remove('flip');
                     void digitEl.offsetWidth;
                     digitEl.classList.add('flip');

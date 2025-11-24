@@ -198,10 +198,7 @@ section.is-fullheight > * {
 }
 
 .stat-number {
-    font-family: 'Monaco', 'Consolas', monospace;
-    font-size: clamp(2.75rem, 4vw, 4rem);
-    font-weight: 700;
-    color: var(--secondary-color);
+    font-weight: bold;
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -210,6 +207,9 @@ section.is-fullheight > * {
 }
 
 .stat-number .digit {
+    font-family: 'Impact', 'Arial', sans-serif;
+    font-size: clamp(2.75rem, 4vw, 4rem);
+    color: var(--secondary-color);
     display: inline-block;
     padding: 0 0.25em;
     transform-origin: center center;
@@ -218,6 +218,12 @@ section.is-fullheight > * {
 
 .stat-number .digit.flip {
     animation: statFlip 1.2s ease;
+}
+
+.stat .stat-label {
+    text-align: justify;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 @keyframes statFlip {
@@ -230,7 +236,6 @@ section.is-fullheight > * {
 }
 
 .stat-label {
-    font-size: 1.2rem;
     color: var(--text-color);
 }
 
