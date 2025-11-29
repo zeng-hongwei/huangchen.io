@@ -451,6 +451,86 @@ function initScrollSnap() {
             navbar.classList.remove('navbar-mini');
         }
     }, 150));
+
+    // Enhanced snap behavior:
+    // - If the current section is taller than viewport and its bottom isn't visible,
+    //   the first directional scroll will snap to the section bottom.
+    // - If already at the bottom, the next scroll will go to the next section top.
+    let isProgrammaticScroll = false;
+
+    const getCurrentSectionByCenter = () => {
+        const center = window.scrollY + window.innerHeight / 2;
+        for (const sec of sections) {
+            const top = sec.offsetTop;
+            const bottom = top + sec.offsetHeight;
+            if (center >= top && center < bottom) return sec;
+        }
+        return sections[0] || null;
+    };
+
+    const scrollTo = (top) => {
+        isProgrammaticScroll = true;
+        window.scrollTo({ top, behavior: 'smooth' });
+        // release lock after animation roughly completes
+        setTimeout(() => { isProgrammaticScroll = false; }, 700);
+    };
+
+    const handleDirectionalNav = (dir) => {
+        if (isProgrammaticScroll) return;
+        const current = getCurrentSectionByCenter();
+        if (!current) return;
+
+        const secTop = current.offsetTop;
+        const secHeight = current.scrollHeight;
+        const secBottomVisible = (window.scrollY + window.innerHeight) >= (secTop + secHeight - 2);
+
+        if (dir > 0) { // scrolling down
+            if (secHeight > window.innerHeight && !secBottomVisible) {
+                // snap to bottom of the current section
+                const target = secTop + secHeight - window.innerHeight;
+                scrollTo(target);
+                return;
+            }
+            // already at bottom or short section -> go to next
+            const idx = Array.prototype.indexOf.call(sections, current);
+            const next = sections[idx + 1];
+            if (next) scrollTo(next.offsetTop);
+        } else { // scrolling up
+            const secTopVisible = window.scrollY <= secTop + 2;
+            if (secHeight > window.innerHeight && !secTopVisible) {
+                // snap to top of the current section
+                scrollTo(secTop);
+                return;
+            }
+            const idx = Array.prototype.indexOf.call(sections, current);
+            const prev = sections[idx - 1];
+            if (prev) scrollTo(prev.offsetTop);
+        }
+    };
+
+    // Throttled wheel handler (passive:false so we can prevent default)
+    const onWheel = utils.throttle((e) => {
+        if (isProgrammaticScroll) return;
+        const delta = e.deltaY;
+        if (Math.abs(delta) < 2) return;
+        e.preventDefault();
+        handleDirectionalNav(delta > 0 ? 1 : -1);
+    }, 250);
+
+    // Key navigation (PageDown/Up, Arrow keys, Space)
+    const onKey = utils.throttle((e) => {
+        if (isProgrammaticScroll) return;
+        if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+            e.preventDefault();
+            handleDirectionalNav(1);
+        } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+            e.preventDefault();
+            handleDirectionalNav(-1);
+        }
+    }, 250);
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('keydown', onKey);
 }
 
 /**
