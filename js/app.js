@@ -266,7 +266,6 @@ function initThemeToggle() {
             item.style.opacity = '';
             item.style.position = '';
         });
-        console.log('Carousel item heights:', itemHeights);
 
         // Create dot indicators
         const dotsContainer = document.createElement('div');
