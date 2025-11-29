@@ -258,60 +258,14 @@ function initThemeToggle() {
         let autoplayId = null;
         const itemHeights = [];
 
-        // Pre-calculate heights
-        items.forEach((item, index) => {
-            item.style.opacity = '1';
-            item.style.position = 'relative';
-            itemHeights[index] = item.offsetHeight;
-            item.style.opacity = '';
-            item.style.position = '';
-        });
+        console.log('Initializing cases carousel with', itemHeights);
 
-        // Create dot indicators
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'carousel-dots';
-        items.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.className = 'carousel-dot';
-            dot.addEventListener('click', () => {
-                currentIndex = index;
-                setActiveState();
-            });
-            dotsContainer.appendChild(dot);
-        });
-        carousel.parentNode.insertBefore(dotsContainer, carousel.nextSibling);
+        // Wait for all images to load before calculating heights
+        const images = carousel.querySelectorAll('img');
+        let loadedCount = 0;
+        const totalImages = images.length;
 
-        const setActiveState = () => {
-            items.forEach((item, index) => {
-                item.classList.toggle('active', index === currentIndex);
-            });
-            // Update dots
-            const dots = dotsContainer.querySelectorAll('.carousel-dot');
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-            // Set carousel height
-            carousel.style.height = itemHeights[currentIndex] + 'px';
-        };
-
-        const moveToNext = () => {
-            currentIndex = (currentIndex + 1) % items.length;
-            setActiveState();
-        };
-
-        const stopAutoplay = () => {
-            if (autoplayId) {
-                clearInterval(autoplayId);
-                autoplayId = null;
-            }
-        };
-
-        const startAutoplay = () => {
-            stopAutoplay();
-            autoplayId = setInterval(moveToNext, 3000);
-        };
-
-        const updateHeights = () => {
+        const calculateHeights = () => {
             items.forEach((item, index) => {
                 item.style.opacity = '1';
                 item.style.position = 'relative';
@@ -319,23 +273,112 @@ function initThemeToggle() {
                 item.style.opacity = '';
                 item.style.position = '';
             });
-            // Update current height
-            carousel.style.height = itemHeights[currentIndex] + 'px';
+            console.log('Calculated item heights:', itemHeights);
         };
 
-        // Initial state
-        setActiveState();
-
-        if (items.length > 1) {
-            startAutoplay();
-            carousel.addEventListener('mouseenter', stopAutoplay);
-            carousel.addEventListener('mouseleave', startAutoplay);
-            dotsContainer.addEventListener('mouseenter', stopAutoplay);
-            dotsContainer.addEventListener('mouseleave', startAutoplay);
+        if (totalImages === 0) {
+            // No images, calculate immediately
+            calculateHeights();
+            initCarousel();
+        } else {
+            // Wait for images to load
+            images.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        calculateHeights();
+                        initCarousel();
+                    }
+                } else {
+                    img.addEventListener('load', () => {
+                        loadedCount++;
+                        if (loadedCount === totalImages) {
+                            calculateHeights();
+                            initCarousel();
+                        }
+                    });
+                    img.addEventListener('error', () => {
+                        loadedCount++;
+                        if (loadedCount === totalImages) {
+                            calculateHeights();
+                            initCarousel();
+                        }
+                    });
+                }
+            });
         }
 
-        // Update heights on resize
-        window.addEventListener('resize', utils.debounce(updateHeights, 150));
+        function initCarousel() {
+            // Create dot indicators
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'carousel-dots';
+            items.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'carousel-dot';
+                dot.addEventListener('click', () => {
+                    currentIndex = index;
+                    setActiveState();
+                });
+                dotsContainer.appendChild(dot);
+            });
+            carousel.parentNode.insertBefore(dotsContainer, carousel.nextSibling);
+
+            const setActiveState = () => {
+                items.forEach((item, index) => {
+                    item.classList.toggle('active', index === currentIndex);
+                });
+                // Update dots
+                const dots = dotsContainer.querySelectorAll('.carousel-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+                // Set carousel height
+                carousel.style.height = itemHeights[currentIndex] + 'px';
+            };
+
+            const moveToNext = () => {
+                currentIndex = (currentIndex + 1) % items.length;
+                setActiveState();
+            };
+
+            const stopAutoplay = () => {
+                if (autoplayId) {
+                    clearInterval(autoplayId);
+                    autoplayId = null;
+                }
+            };
+
+            const startAutoplay = () => {
+                stopAutoplay();
+                autoplayId = setInterval(moveToNext, 3000);
+            };
+
+            const updateHeights = () => {
+                items.forEach((item, index) => {
+                    item.style.opacity = '1';
+                    item.style.position = 'relative';
+                    itemHeights[index] = item.offsetHeight;
+                    item.style.opacity = '';
+                    item.style.position = '';
+                });
+                // Update current height
+                carousel.style.height = itemHeights[currentIndex] + 'px';
+            };
+
+            // Initial state
+            setActiveState();
+
+            if (items.length > 1) {
+                startAutoplay();
+                carousel.addEventListener('mouseenter', stopAutoplay);
+                carousel.addEventListener('mouseleave', startAutoplay);
+                dotsContainer.addEventListener('mouseenter', stopAutoplay);
+                dotsContainer.addEventListener('mouseleave', startAutoplay);
+            }
+
+            // Update heights on resize
+            window.addEventListener('resize', utils.debounce(updateHeights, 150));
+        }
     }
 
     /**
