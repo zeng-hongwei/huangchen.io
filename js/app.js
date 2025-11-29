@@ -256,55 +256,48 @@ function initThemeToggle() {
 
         let currentIndex = 0;
         let autoplayId = null;
+        const itemHeights = [];
+
+        // Pre-calculate heights
+        items.forEach((item, index) => {
+            item.style.opacity = '1';
+            item.style.position = 'relative';
+            itemHeights[index] = item.offsetHeight;
+            item.style.opacity = '';
+            item.style.position = '';
+        });
+        console.log('Carousel item heights:', itemHeights);
+
+        // Create dot indicators
+        const dotsContainer = document.createElement('div');
+        dotsContainer.className = 'carousel-dots';
+        items.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'carousel-dot';
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                setActiveState();
+            });
+            dotsContainer.appendChild(dot);
+        });
+        carousel.parentNode.insertBefore(dotsContainer, carousel.nextSibling);
 
         const setActiveState = () => {
             items.forEach((item, index) => {
                 item.classList.toggle('active', index === currentIndex);
             });
-        };
-
-        const scrollToCurrent = (behavior = 'smooth') => {
-            const activeItem = items[currentIndex];
-            if (!activeItem) return;
-
-            setActiveState();
-
-            const containerWidth = carousel.clientWidth;
-            const itemWidth = activeItem.clientWidth;
-            const desiredLeft = activeItem.offsetLeft - (containerWidth - itemWidth) / 2;
-            const maxScroll = carousel.scrollWidth - containerWidth;
-            const clampedLeft = Math.max(0, Math.min(desiredLeft, maxScroll));
-
-            if (typeof carousel.scrollTo === 'function') {
-                carousel.scrollTo({ left: clampedLeft, behavior });
-            } else {
-                carousel.scrollLeft = clampedLeft;
-            }
+            // Update dots
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+            // Set carousel height
+            carousel.style.height = itemHeights[currentIndex] + 'px';
         };
 
         const moveToNext = () => {
             currentIndex = (currentIndex + 1) % items.length;
-            scrollToCurrent();
-        };
-
-        const syncActiveWithScroll = () => {
-            const containerCenter = carousel.scrollLeft + carousel.clientWidth / 2;
-            let closestIndex = currentIndex;
-            let smallestDistance = Number.POSITIVE_INFINITY;
-
-            items.forEach((item, index) => {
-                const itemCenter = item.offsetLeft + item.clientWidth / 2;
-                const distance = Math.abs(itemCenter - containerCenter);
-                if (distance < smallestDistance) {
-                    smallestDistance = distance;
-                    closestIndex = index;
-                }
-            });
-
-            if (closestIndex !== currentIndex) {
-                currentIndex = closestIndex;
-                setActiveState();
-            }
+            setActiveState();
         };
 
         const stopAutoplay = () => {
@@ -319,16 +312,31 @@ function initThemeToggle() {
             autoplayId = setInterval(moveToNext, 3000);
         };
 
-        scrollToCurrent('auto');
+        const updateHeights = () => {
+            items.forEach((item, index) => {
+                item.style.opacity = '1';
+                item.style.position = 'relative';
+                itemHeights[index] = item.offsetHeight;
+                item.style.opacity = '';
+                item.style.position = '';
+            });
+            // Update current height
+            carousel.style.height = itemHeights[currentIndex] + 'px';
+        };
+
+        // Initial state
+        setActiveState();
 
         if (items.length > 1) {
             startAutoplay();
             carousel.addEventListener('mouseenter', stopAutoplay);
             carousel.addEventListener('mouseleave', startAutoplay);
-            carousel.addEventListener('scroll', utils.throttle(syncActiveWithScroll, 120));
+            dotsContainer.addEventListener('mouseenter', stopAutoplay);
+            dotsContainer.addEventListener('mouseleave', startAutoplay);
         }
 
-        window.addEventListener('resize', utils.debounce(() => scrollToCurrent('auto'), 150));
+        // Update heights on resize
+        window.addEventListener('resize', utils.debounce(updateHeights, 150));
     }
 
     /**
