@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initInstructorImage();
     initCasesCarousel();
     initStatsFlip();
+    initPDFLink();
 });
 
 /**
@@ -606,3 +607,22 @@ function initInstructorImage() {
     // 监听窗口大小变化
     window.addEventListener('resize', utils.debounce(updateInstructorImage, 100));
 }
+
+/**
+ * 如果是桌面端微信浏览器（不支持PDF预览）
+ * 使用pdf.html?file=... 进行PDF查看
+ * 将 a.pdf-link 的 href 替换为 pdf.html?file=...
+ */
+function initPDFLink() {
+    const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+    const isMobile = /Mobile/i.test(navigator.userAgent);
+    if (isWeChat && !isMobile) {
+        const pdfLinks = document.querySelectorAll('a.pdf-link');
+        pdfLinks.forEach(link => {
+            const file = link.getAttribute('href').split('/').pop();
+            link.setAttribute('href', `pdf.html?file=${file}`);
+        });
+    }
+}
+
+// End of app.js

@@ -3,6 +3,9 @@ import { defineConfig } from 'vite';
 import { execSync } from 'node:child_process';
 import { copyFileSync, cpSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = resolve(fileURLToPath(import.meta.url), '..');
 
 function resolveCommitHash() {
   if (process.env.VITE_APP_COMMIT) return process.env.VITE_APP_COMMIT;
@@ -57,12 +60,17 @@ export default defineConfig({
   root: '.',
   build: {
     outDir: 'dist',
+    target: 'es2022',
     rollupOptions: {
-      input: 'index.html'
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        pdf: resolve(__dirname, 'pdf.html')
+      }
     }
   },
   server: {
     port: 3000,
+    host: '0.0.0.0',
     open: true
   },
   define: {
