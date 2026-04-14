@@ -56,6 +56,23 @@ function copyDocsPlugin() {
   };
 }
 
+function copySharePlugin() {
+  return {
+    name: 'copy-share-to-dist',
+    apply: 'build',
+    closeBundle() {
+      const src = resolve(process.cwd(), 'assets/share');
+      const dest = resolve(process.cwd(), 'dist/assets/share');
+      try {
+        cpSync(src, dest, { recursive: true });
+        console.log('Copied share to dist/assets/share');
+      } catch (error) {
+        console.error('Failed to copy share:', error);
+      }
+    }
+  };
+}
+
 export default defineConfig({
   root: '.',
   build: {
@@ -76,5 +93,5 @@ export default defineConfig({
   define: {
     __APP_COMMIT__: JSON.stringify(commitHash)
   },
-  plugins: [copyLogoPlugin(), copyDocsPlugin()]
+  plugins: [copyLogoPlugin(), copyDocsPlugin(), copySharePlugin()]
 });
